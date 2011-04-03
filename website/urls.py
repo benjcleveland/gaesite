@@ -14,5 +14,5 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^games/', include('gameviewer.urls')),
     (r'^admin/', include(admin.site.urls)),
-#    (r'^team/', include('myteam.urls')),
+    (r'^team/', include('myteam.urls')),
 )
