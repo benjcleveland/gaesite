@@ -46,6 +46,7 @@ ROOT_URLCONF = 'urls'
 # add the team cowboy files to the path
 # not sure if this is the best way to do this
 sys.path.append(os.path.join(os.path.dirname(__file__), 'team_cowboy'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'gdata_src'))
 
 
 # Activate django-dbindexer if available
