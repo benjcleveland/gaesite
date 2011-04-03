@@ -4,6 +4,7 @@
 from djangoappengine.settings_base import *
 
 import os
+import sys
 
 SECRET_KEY = '=r-$b*8hglm+858&9t043hlm6-&6-3d3vfc4((7yd0dbrakhvi'
 
@@ -15,6 +16,7 @@ INSTALLED_APPS = (
     'djangotoolbox',
     'django.contrib.admin',
     'gameviewer',
+    'myteam',
 
     # djangoappengine should come last, so it can override a few manage.py commands
     'djangoappengine',
@@ -40,6 +42,11 @@ ADMIN_MEDIA_PREFIX = '/media/admin/'
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
 
 ROOT_URLCONF = 'urls'
+
+# add the team cowboy files to the path
+# not sure if this is the best way to do this
+sys.path.append(os.path.join(os.path.dirname(__file__), 'team_cowboy'))
+
 
 # Activate django-dbindexer if available
 try:
