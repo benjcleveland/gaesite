@@ -27,9 +27,10 @@ def index( request ):
             username = login_form.cleaned_data['username']
             password = login_form.cleaned_data['password']
 
+            tc_api = team_cowboy.TeamCowboyApi()
             try:
                 # try to login
-                login = team_cowboy.team_cowboy_login(username, password)
+                login = tc_api.team_cowboy_login(username, password)
             except urllib2.HTTPError:
                 # assume a failure means that the username and password is in correct
                 message = 'Invalid username or password!'
@@ -37,8 +38,8 @@ def index( request ):
                 return render_to_response('myteam/index.html', { 'title' : 'Login', 'message' : message, 'login_form':login_form }, context_instance=RequestContext(request))
 
             try:
-                teamids = team_cowboy.team_cowboy_get_teamid( login['body']['token'] )
-                teams = team_cowboy.team_cowboy_get_team_members(login['body']['token'], teamids )
+                teamids = tc_api.team_cowboy_get_teamid( login['body']['token'] )
+                teams = tc_api.team_cowboy_get_team_members(login['body']['token'], teamids )
             except urllib2.HTTPError,e:
                 message = 'Error getting data from team cowboy...'
                 return render_to_response('myteam/index.html', { 'title' : 'Login', 'message' : message, 'login_form':login_form }, context_instance=RequestContext(request))
@@ -51,8 +52,6 @@ def index( request ):
     else:
         # must be a get
         login = LoginForm()
-        team_cowboy.team_cowboy_test('thisisatest')
-        team_cowboy.team_cowboy_test_post('thisisatest_post')
         message = 'Enter your team cowboy username and password.'
         return render_to_response('myteam/index.html', { 'title' : 'Login', 'message' : message, 'login_form':login }, context_instance=RequestContext(request))
 
