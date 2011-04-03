@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+
+<p>Select a game for more information</p>
+{% if latest_game_list %}
+    <ul>
+    {% for game in latest_game_list %}
+        <div>
+        <li><a href='/games/{{ game.id }}/' class='menu_link'>{{ game.title }}</a>
+        {% if game.average_rating %}
+            Average rating - {{ game.average_rating }}
+        {% endif %}
+        </li>
+        </div>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

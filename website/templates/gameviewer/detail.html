@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content">
+<h2>Board game details for {{ game.title }}</h2>
+
+<!img src="{% load adminmedia %}{% admin_media_prefix %}img/{{ game.image }}" boarder=0>
+<img src="{{ game.image_name }}" boarder=0>
+<p>Title: {{ game.title }}</p>
+<p>Description: {{ game.description }}</p>
+<p>Publisher: <a href="/games/list/{{ game.id }}/publisher/" class="menu_link">{{ game.publisher }}</a><br>
+    Year: <a href="/games/list/{{ game.id }}/year/" class="menu_link">{{ game.year_published }}</a><br>
+    Min number players: <a href="/games/list/{{ game.id }}/min/" class="menu_link">{{ game.minplayers }}</a><br>
+    Max number players: <a href="/games/list/{{ game.id }}/max/" class="menu_link">{{ game.maxplayers }}</a><br>
+    Genre: <a href="/games/list/{{ game.id }}/genre/" class="menu_link">{{ game.genre }}</a>
+</p>
+
+<h3>Average rating - {{ average_rating.rating__avg }}</h3>
+<p>
+{% for rating in game.rating_set.all %}
+    {{ rating.name }} rates this game a {{ rating.rating }}
+    {% if rating.comment %}
+        - {{ rating.comment }}
+    {% endif %}
+    <br>
+{% endfor %}
+</p>
+
+
+{% if rating_form %}
+<h4>Rate this game</h4>
+
+<form action="/games/rate/{{ game.id }}/" method="post">
+    {% csrf_token %}
+    <table >
+        {% for field in rating_form %}
+        <tr><td>{{ field.label_tag }}:</td><td>{{ field }}</td><td>{{ field.errors }}</td></tr> 
+        {% endfor %}
+        <tr><td><input type="submit" value="Submit" /></td></tr>
+    </table>
+</form>
+{% endif %}
+
+<p class="quote">Last played on {{ game.last_played }}</p>
+
+</div>
+
+{% endblock %}

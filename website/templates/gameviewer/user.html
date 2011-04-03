@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+
+<p>Select a game for more information</p>
+{% if latest_game_list %}
+    <ul>
+    {% for name, user in latest_game_list %}
+        <h4>{{ name }}</h4>
+        <p>
+    {% for rating in user %}
+        <div>
+        <li><a href='/games/{{ rating.game.id }}/' class='menu_link'>{{ rating.game }}</a>
+        {% if rating.rating %}
+            Rating - {{ rating.rating }}
+        {% endif %}
+        </li>
+        </div>
+    {% endfor %}
+        </p>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

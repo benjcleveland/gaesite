@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="description" content="Website short description." />
+<meta name="keywords" content="website main keywords" />
+	<title>boardgames</title>
+<link href="{% load adminmedia %}{% admin_media_prefix %}css/game_site_style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="header"><h1>{% block header %}Board Games!{% endblock %}</h1></div>
+
+<div id="sub_header">{% block sub_header %}Everyone loves board games!{% endblock %}</div>
+
+<div id="main_content_top"></div>
+
+<div id="main_content">
+
+<div class="content">
+    {% block content %}{% endblock %}
+</div>
+
+<div class="menu">
+    <div class="menu_title">Main menu</div>
+    {% block sidebar %}
+        <ul>
+            <li><a href="{% url gameviewer.views.index %}" class="menu_link">Home</a></li>
+            <li><a href="{% url gameviewer.views.top %}" class="menu_link">Top 10 games</a></li>
+            <li><a href="{% url gameviewer.views.user_top %}" class="menu_link">Top 10 games by user</a></li>
+            <li><a href="{% url gameviewer.views.about %}" class="menu_link">About</a></li><br>
+        </ul>
+    {% endblock %}
+    </div>
+
+<div id="clear"></div>
+
+</div>
+
+<div id="main_content_bottom">
+</div>
+
+<div id="footer"><strong>Copyright &copy; 2011</strong> | <a href="{% url gameviewer.views.index %}">Home</a> | <b>Design by</b> <a href="http://www.pikanai.com">Pikanai.com</a></div>
+
+</div>
+
+</body>
+
+</html>
