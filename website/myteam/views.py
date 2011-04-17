@@ -75,32 +75,48 @@ def update_calendar( request ):
             
             games = tc_api.team_cowboy_get_team_schedule( login['body']['token'], teamids ) 
 
-
             # connect to google calendar
             client = gdata.calendar.client.CalendarClient(source='ben-cleveland-schedule-updater_1.0')
             #gdata.alt.appengine.run_on_appengine(client)
             client.ClientLogin( goog_username, goog_password, client.source)
-            '''  
-            for game in games:
-                event = gdata.calendar.data.CalendarEventEntry()
-                event.title = atom.data.Title(text=game['title'])
-                event.content = atom.data.Content(text=game['content'])
-                event.where.append(gdata.data.Where(value=game['content']))
+              
+            # get all the events on the default calendar
+            feed = client.GetCalendarEventFeed()
+            
+            # get a list of the events
+            events = [ event.title.text for i, event in zip(xrange(len(feed.entry)), feed.entry) ]
 
-                # Use current time for the start_time and have the event last 1 hour
-                end_time = time.strftime('%Y-%m-%dT%H:%M:%S.000Z',
-                    time.gmtime(time.time() + 3600))
+            # create a feed to hold all the batch request entries
+            batch_feed = gdata.calendar.data.CalendarEventFeed()
+            for game in games:
+                # build the start and end times
                 start_time = game['starttime'].replace(' ','T')
                 end_time = game['endtime'].replace(' ','T')
-                event.when.append(gdata.data.When(start=start_time,
-                    end=end_time))
 
-                new_event = client.InsertEvent(event)
-                #new_event = client.Update(event)
-            '''
-            #message = 'Your google calendar has been updated with your team cowboy schedule'
-            message = 'This is not yet implemented'
-            return render_to_response('myteam/calendar.html', {'title' : 'Updated Schedule', 'message' : message}, context_instance=RequestContext(request))
+                # check to see if this game is already on the calendar
+                if game['title'] not in events:
+                    # add this event
+                    event = gdata.calendar.data.CalendarEventEntry()
+                    event.title = atom.data.Title(text=game['title'])
+                    event.content = atom.data.Content(text=game['content'])
+                    event.where.append(gdata.data.Where(value=game['content']))
+
+
+                    event.when.append(gdata.data.When(start=start_time,
+                        end=end_time))
+
+                    event.batch_id = gdata.data.BatchId(text=game['title'])
+                    batch_feed.AddInsert(entry=event)
+
+                    #new_event = client.InsertEvent(event)
+                    #new_event = client.Update(event)
+
+            # submit the batch request to the server
+            response_feed = client.ExecuteBatch(batch_feed, gdata.calendar.client.DEFAULT_BATCH_URL)
+
+            message = 'Your google calendar has been updated with your team cowboy schedule'
+            return render_to_response('myteam/calendar.html', {'title' : 'Updated Schedule', 'message' : message, 'feed':events, 'batch_results' : response_feed.entry}, context_instance=RequestContext(request))
+
     else:
         login = googLoginForm()
         message = 'Enter your login information.  Hitting submit will update your google calendar with your team cowboy game schedule'

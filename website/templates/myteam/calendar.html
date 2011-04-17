@@ -36,4 +36,21 @@
             </table>
         </form>
     {% endif %}
+
+    {% if feed %}
+    <ul>
+        {% for event in feed %}
+        <li>{{ event }}{{ event.when.start }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+
+    {% if batch_results %}
+    <ul>
+        {% for entry in batch_results %}
+        <li>{{ entry.batch_id.text }}{{ entry.batch_status.code }}{{ entry.batch_status.reason }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 {% endblock %}
