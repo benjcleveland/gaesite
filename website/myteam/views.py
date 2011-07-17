@@ -93,11 +93,12 @@ def update_calendar( request ):
                 start_time = game['starttime'].replace(' ','T')
                 end_time = game['endtime'].replace(' ','T')
 
+                title = game['team_name'] + ' vs. ' + game['opponent']
                 # check to see if this game is already on the calendar
-                if game['title'] not in events:
+                if title not in events:
                     # add this event
                     event = gdata.calendar.data.CalendarEventEntry()
-                    event.title = atom.data.Title(text=game['title'])
+                    event.title = atom.data.Title(text=title)
                     event.content = atom.data.Content(text=game['content'])
                     event.where.append(gdata.data.Where(value=game['content']))
 
@@ -105,7 +106,7 @@ def update_calendar( request ):
                     event.when.append(gdata.data.When(start=start_time,
                         end=end_time))
 
-                    event.batch_id = gdata.data.BatchId(text=game['title'])
+                    event.batch_id = gdata.data.BatchId(text=title)
                     batch_feed.AddInsert(entry=event)
 
                     #new_event = client.InsertEvent(event)
